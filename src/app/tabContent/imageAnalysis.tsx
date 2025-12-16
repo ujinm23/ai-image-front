@@ -1,21 +1,20 @@
-import TabTrigger from "../_components/tabTrigger";
+
 import {ArticleGeneratorIcon} from "../_icons/ArticleGeneratorIcon"
 import {Button} from "@/components/ui/button";
 import { DocumentIcon } from "../_icons/DocumentIcon";
 import {ReloadIcon} from "../_icons/ReloadIcon";
 import ImageUpload from "../_components/imageUpload";
 
-export default function ImageAnalysis () {
+export function ImageAnalysis () {
     
   return (
      <div className="flex flex-col items-center justify-start">
            
-    <div className="flex flex-col h-222 w-145  bg-[#FFF]  gap-6 font-semibold text-[20px] py-6 items-start">
-       <TabTrigger  />
+    <div className="flex flex-col h-180 w-145  bg-[#FFF]  gap-6 font-semibold text-[20px] py-6 items-start">
+       
        <div className="h-41 flex flex-col gap-2">
        <div className="flex justify-between w-145">
-        <div className="flex items-center gap-0.5">
-            
+        <div className="flex items-center gap-2">
         <ArticleGeneratorIcon />
         <p>Image Analysis</p>
        
@@ -31,7 +30,7 @@ export default function ImageAnalysis () {
         </div>
         
             <div className="h-41 flex flex-col gap-2">
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-2">
         <DocumentIcon />
         <p>Here is the summary</p>
         </div>
