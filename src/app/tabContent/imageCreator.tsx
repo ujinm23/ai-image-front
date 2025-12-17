@@ -2,8 +2,8 @@
 import {ArticleGeneratorIcon} from "../_icons/ArticleGeneratorIcon"
 import {Button} from "@/components/ui/button";
 import { ImageIcon } from "../_icons/ImageIcon";
-import {ReloadIcon} from "../_icons/ReloadIcon";
 import { Textarea } from "@/components/ui/textarea";
+import ReloadButton from "../_components/reloadButton";
 
 
 export function ImageCreator () {
@@ -20,9 +20,7 @@ export function ImageCreator () {
         <p>Food image creator</p>
        
         </div>
-        <div  className="w-12 h-10 border border-[#E4E4E7] rounded-md flex justify-center items-center">
-            <ReloadIcon />
-            </div>
+       <ReloadButton/>
             </div>
         <p className="text-[#71717A] font-normal text-[14px]">What food image do you want? Describe it briefly.</p>
         <div className="flex-col flex gap-2 items-end">

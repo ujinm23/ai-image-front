@@ -2,8 +2,8 @@
 import {ArticleGeneratorIcon} from "../_icons/ArticleGeneratorIcon"
 import {Button} from "@/components/ui/button";
 import { DocumentIcon } from "../_icons/DocumentIcon";
-import {ReloadIcon} from "../_icons/ReloadIcon";
 import { Textarea } from "@/components/ui/textarea";
+import ReloadButton from "../_components/reloadButton";
 
 export function IngredientRecognition () {
     
@@ -19,9 +19,7 @@ export function IngredientRecognition () {
         <p>Ingredient recognition</p>
        
         </div>
-        <div  className="w-12 h-10 border border-[#E4E4E7] rounded-md flex justify-center items-center">
-            <ReloadIcon />
-            </div>
+       <ReloadButton/>
             </div>
         <p className="text-[#71717A] font-normal text-[14px]">Describe the food, and AI will detect the ingredients.</p>
         <div className="flex-col flex gap-2 items-end">
