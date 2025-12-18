@@ -20,12 +20,12 @@ export default function ImageUpload() {
     setResult("");
 
     try {
-      const res = await fetch("http://localhost:168/analyze-image", {
+      const response = await fetch("http://localhost:168/analyze-image", {
         method: "POST",
         body: formData,
       });
 
-      const data = await res.json();
+      const data = await response.json();
       setResult(data.description);
     } catch (err) {
       console.error(err);
@@ -42,7 +42,7 @@ export default function ImageUpload() {
         <p className="font-normal text-[#71717A]">JPG, PNG</p>
         <input
           type="file"
-          accept="image/png, image/jpeg"
+          accept="image/*"
           className="hidden"
           onChange={handleFileChange}
         />
@@ -53,7 +53,7 @@ export default function ImageUpload() {
       )}
 
       {loading && <p>Analyzing image...</p>}
-      {result && <p>🧠 {result}</p>}
+      {result && <p> {result}</p>}
     </div>
   );
 }
