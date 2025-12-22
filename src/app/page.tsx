@@ -1,10 +1,10 @@
 "use client";
 import Header from "./_features/header";
 import { ImageAnalysis } from "./tabContent/imageAnalysis";
-import { IngredientRecognition } from "./tabContent/ingredientRecognition";
+import { ImageEditor } from "./tabContent/imageEditor";
 import { ImageCreator } from "./tabContent/imageCreator";
 import { useState } from "react";
-import Chat from "@/app/_components/Chat"
+import Chat from "@/app/_components/Chat";
 
 type TabId = "tab1" | "tab2" | "tab3";
 
@@ -18,21 +18,21 @@ export default function Home() {
 
   const tabs: Tab[] = [
     { id: "tab1", label: "Image analysis" },
-    { id: "tab2", label: "Ingredient recognition" },
-    { id: "tab3", label: "Image creator" },
+    { id: "tab2", label: "Image creator" },
+    { id: "tab3", label: "Image editor" },
   ];
 
   const tabContent = {
     tab1: <ImageAnalysis />,
-    tab2: <IngredientRecognition />,
-    tab3: <ImageCreator />,
+    tab2: <ImageCreator />,
+    tab3: <ImageEditor />,
   };
 
   return (
     <div className="flex flex-col items-center justify-start pr-9 pb-9">
       <Header />
       <div className="pt-6">
-        <div className="flex h-9 w-105 p-1 rounded-lg bg-[#F4F4F5]">
+        <div className="flex h-9 w-fit p-1 rounded-lg bg-[#F4F4F5]">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -49,11 +49,11 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="mt-6 w-full">{tabContent[activeTab]}</div>
+        <div className=" w-full">{tabContent[activeTab]}</div>
       </div>
-      <div className="justify-end flex w-screen"><Chat/></div>
-      
-
+      <div className="justify-end flex w-screen">
+        <Chat />
+      </div>
     </div>
   );
 }

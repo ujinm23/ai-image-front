@@ -11,21 +11,19 @@ export default function FoodImageCreator() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
 
-  useEffect(() => {
-    // console.log("current input:", textValue);
-  }, [textValue]);
+  useEffect(() => {}, [textValue]);
 
   const handleGenerate = async () => {
-    if (!textValue) return; // optional: prevent empty requests
+    if (!textValue) return;
     setLoading(true);
     setResult("");
 
     try {
       const response = await axios.post("http://localhost:168/image-create", {
-        input: textValue, // send textValue to backend
+        input: textValue,
       });
       console.log("response", response.data);
-      setResult(response.data.result); // assuming your backend sends { result: "..." }
+      setResult(response.data.result);
     } catch (err) {
       console.error(err);
       setResult("Failed to create image");
@@ -38,7 +36,7 @@ export default function FoodImageCreator() {
       <div className="flex-col flex gap-2 items-end">
         <Textarea
           className="w-145 h-31 px-3 py-2 border rounded-md border-[#E4E4E7] text-[#71717A] font-normal text-[14px]"
-          placeholder="Хоолны тайлбар"
+          placeholder="Tайлбар"
           value={textValue}
           onChange={(e) => setTextValue(e.target.value)}
         />

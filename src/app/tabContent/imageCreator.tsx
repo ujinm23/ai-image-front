@@ -10,12 +10,12 @@ export function ImageCreator() {
           <div className="flex justify-between w-145">
             <div className="flex items-center gap-2">
               <ArticleGeneratorIcon />
-              <p>Food image creator</p>
+              <p>Image creator</p>
             </div>
             <ReloadButton />
           </div>
           <p className="text-[#71717A] font-normal text-[14px]">
-            What food image do you want? Describe it briefly.
+            What image do you want? Describe it briefly.
           </p>
           <FoodImageCreator />
         </div>
