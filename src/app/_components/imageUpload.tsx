@@ -1,123 +1,148 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { DocumentIcon } from "../_icons/DocumentIcon";
 import DeleteButton from "./DeleteButton";
+import { ArticleGeneratorIcon } from "../_icons/ArticleGeneratorIcon";
+import ReloadButton from "../_components/reloadButton";
 
 export default function ImageUpload() {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [result, setResult] = useState<object>({});
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [finished, setFinished] = useState(false);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    }
+  const handleReload = () => {
+    setFile(null);
+    setPreview(null);
+    setResult("");
+    setFinished(false);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+
+    setFile(selectedFile);
+    setPreview(URL.createObjectURL(selectedFile));
+    setResult("");
   };
 
   const handleGenerate = async () => {
-    if (!selectedImage) {
-      alert("Please select an image first!");
-      return;
-    }
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
 
     setLoading(true);
-    try {
-      const response = await uploadImageForAnalysis(selectedImage);
-      setResult(response);
+    setResult("");
 
-      console.log("Backend response:", response);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Failed to analyze image");
+    try {
+      const response = await axios.post(
+        "http://localhost:168/analyze-image",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setResult(response.data.description);
+      setFinished(true);
+    } catch (err) {
+      console.error(err);
+      setResult("Failed to analyze image");
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
   return (
     <div>
-      <div className="flex-col flex gap-2 items-end">
-        <div className="space-y-4">
-          <label className="flex h-10 w-145 items-center px-3 py-2 border  rounded-md border-[#E4E4E7] font-medium text-[14px] cursor-pointer">
-            <p className="px-2">Choose file</p>
-            <p className="font-normal text-[#71717A]">JPG, PNG</p>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-              className="cursor-pointer"
-            />
-          </label>
-
-          {previewUrl && (
-        <div className="border rounded-lg p-1 w-50">
-          <Image
-            src={previewUrl}
-            alt="Preview"
-            width={200}
-            height={133}
-            className="max-w-full h-auto max-h-64 mx-auto rounded-[6px]"
-          />
-        </div>
-      )}
-      <div className="w-full flex justify-end">
-        <Button
-          onClick={handleGenerate}
-          disabled={!selectedImage || loading}
-          className="w-fit"
-        >
-          {loading ? (
-            <>
-              <RotateCw className="w-4 h-4 mr-2 animate-spin" />
-              Analyzing...
-            </>
-          ) : (
-            <>
-              <FileText className="w-4 h-4 mr-2" />
-              Generate
-            </>
-          )}
-        </Button>
-      </div>
-      <p className="text-[#09090B] font-sans text-xl font-semibold leading-7 tracking-normal flex flex-row gap-2">
-        <FileText />
-        Here is the summary
-      </p>
- 
-      <p> {result?.result?.reasoning_content}</p>
-          {/* {preview && (
-            <div className="w-52 h-35.25 border-[#E4E4E7] rounded-lg border flex justify-center items-center">
-              <img
-                src={preview}
-                alt="preview"
-                className="w-50 h-33.25 rounded-lg"
-              />
-              <DeleteButton />
-            </div>
-          )}
-        </div>
-        <Button>Generate</Button>
-      </div>
-
       <div className="h-41 flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <DocumentIcon />
-          <p>Here is the summary</p>
+        <div className="flex justify-between w-145">
+          <div className="flex items-center gap-2">
+            <ArticleGeneratorIcon />
+            <p>Image Analysis</p>
+          </div>
+          <ReloadButton disabled={!finished} onClick={handleReload} />
         </div>
         <p className="text-[#71717A] font-normal text-[14px]">
-          First, enter your image to recognize an ingredients.
+          Upload a food photo, and AI will detect the ingredients.
         </p>
-        {loading && <p>Analyzing image...</p>}
-        {result && <p> {result}</p>}{" "} */}
+        <div className="flex-col flex gap-2 items-end">
+          <div className="w-145 flex justify-start">
+            {!file && (
+              <label className="flex h-10 w-145 items-center px-3 py-2 border rounded-md border-[#E4E4E7] font-medium text-[14px] cursor-pointer">
+                <p className="px-2">Choose file</p>
+                <p className="font-normal text-[#71717A]">JPG, PNG</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                  disabled={loading}
+                />
+              </label>
+            )}
+
+            {preview && (
+              <div className="relative w-52 h-35.25 border-[#E4E4E7] rounded-lg border flex justify-center items-center">
+                <img
+                  src={preview}
+                  alt="preview"
+                  className="w-50 h-33.25 rounded-lg"
+                />
+                <DeleteButton
+                  onClick={() => {
+                    setFile(null);
+                    setPreview(null);
+                    setResult("");
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          <Button
+            onClick={handleGenerate}
+            disabled={!file || loading || finished}
+          >
+            {loading ? "Generating..." : "Generate"}
+          </Button>
+        </div>
+
+        <div className="h-41 flex flex-col gap-2 mt-4">
+          <div className="flex items-center gap-2">
+            <DocumentIcon />
+            <p>Here is the summary</p>
+          </div>
+
+          {!result && (
+            <p className="text-[#71717A]  font-normal text-[14px]">
+              {loading
+                ? "Working ..."
+                : "First, enter your text to generate an image."}
+            </p>
+          )}
+
+          {loading && (
+            <div className="animate-spin h-6 w-6 border border-[#E4E4E7] border-t-black rounded-full" />
+          )}
+          {result && (
+            <p className="border border-[#E4E4E7] p-4 rounded-lg">{result}</p>
+          )}
+        </div>
       </div>
     </div>
   );

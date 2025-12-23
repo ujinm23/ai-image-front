@@ -1,9 +1,17 @@
 import { TrashIcon } from "@/app/_icons/TrashIcon";
 
-export default function DeleteButton() {
+type DeleteButtonProps = {
+  onClick: () => void;
+};
+
+export default function DeleteButton({ onClick }: DeleteButtonProps) {
   return (
-    <div className="w-6 h-6 border border-[#E4E4E7] bg-white rounded-sm flex justify-center items-center cursor-pointer">
+    <button
+      onClick={onClick}
+      className="absolute bottom-2 right-3 z-10 bg-white rounded-sm p-1 shadow hover:bg-red-50"
+      type="button"
+    >
       <TrashIcon />
-    </div>
+    </button>
   );
 }

@@ -1,88 +1,74 @@
 "use client";
-
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { DocumentIcon } from "../_icons/DocumentIcon";
-import DeleteButton from "./DeleteButton";
-import { Textarea } from "@/components/ui/textarea";
+import { ArticleGeneratorIcon } from "../_icons/ArticleGeneratorIcon";
+import ReloadButton from "../_components/reloadButton";
+import FileUpload from "@/app/ImageEditor/FileUpload";
+import PromptInput from "@/app/ImageEditor/promptInput";
+import GenerateButton from "./GenerateButton";
+import ResultDisplay from "@/app/ImageEditor/ResultDisplay";
 
 export default function ImageEditing() {
+  const [preview, setPreview] = useState<string | null>(null);
+  const [prompt, setPrompt] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [finished, setFinished] = useState(false);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleReload = () => {
+    setPreview(null);
+    setPrompt("");
+    setResult("");
+    setFinished(false);
+  };
 
-    setPreview(URL.createObjectURL(file));
-
-    const formData = new FormData();
-    formData.append("image", file);
-
+  const handleGenerate = async () => {
+    if (!preview || !prompt) return;
     setLoading(true);
     setResult("");
 
+    const formData = new FormData();
+    const fileBlob = await fetch(preview).then((r) => r.blob());
+    formData.append("image", fileBlob, "image.png");
+    formData.append("prompt", prompt);
+
     try {
-      const response = await fetch("http://localhost:168/analyze-image", {
+      const res = await fetch("http://localhost:168/image-editor", {
         method: "POST",
         body: formData,
       });
-
-      const data = await response.json();
-      setResult(data.description);
-      console.log("result", result);
+      const data = await res.json();
+      setResult(data.result);
+      setFinished(true);
     } catch (err) {
       console.error(err);
-      setResult("Failed to analyze image");
+      setResult("Failed to edit image");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <div className="flex-col flex gap-2 items-end">
-        <div className="space-y-4">
-          <label className="flex h-10 w-145 items-center px-3 py-2 border  rounded-md border-[#E4E4E7] font-medium text-[14px] cursor-pointer">
-            <p className="px-2">Choose file</p>
-            <p className="font-normal text-[#71717A]">JPG, PNG</p>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </label>
-          <Textarea
-            className="w-145 h-21 px-3 py-2 border rounded-md border-[#E4E4E7] text-[#71717A] font-normal text-[14px]"
-            placeholder="Your propmt here"
-          />
-          {preview && (
-            <div className="w-52 h-35.25 border-[#E4E4E7] rounded-lg border flex justify-center items-center">
-              <img
-                src={preview}
-                alt="preview"
-                className="w-50 h-33.25 rounded-lg"
-              />
-              <DeleteButton />
-            </div>
-          )}
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between w-145">
+        <div className="flex items-center gap-2">
+          <ArticleGeneratorIcon />
+          <p>Image Editor</p>
         </div>
-        <Button>Generate</Button>
+        <ReloadButton disabled={!finished} onClick={handleReload} />
       </div>
 
-      <div className="h-41 flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <DocumentIcon />
-          <p>Here is the product</p>
-        </div>
-        <p className="text-[#71717A] font-normal text-[14px]">
-          First, enter your image to start editing.
-        </p>
-        {loading && <p>Analyzing image...</p>}
-        {result && <p> {result}</p>}{" "}
-      </div>
+      <p className="text-[#71717A] font-normal text-[14px]">
+        Upload a photo and provide a prompt, AI will edit your image.
+      </p>
+
+      <FileUpload preview={preview} setPreview={setPreview} loading={loading} />
+      <PromptInput prompt={prompt} setPrompt={setPrompt} loading={loading} />
+      <GenerateButton
+        onClick={handleGenerate}
+        disabled={!preview || !prompt || loading}
+        loading={loading}
+      />
+      <ResultDisplay result={result} loading={loading} />
     </div>
   );
 }
