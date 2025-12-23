@@ -4,7 +4,7 @@ import { ArticleGeneratorIcon } from "../_icons/ArticleGeneratorIcon";
 import ReloadButton from "../_components/reloadButton";
 import FileUpload from "@/app/ImageEditor/FileUpload";
 import PromptInput from "../ImageEditor/PromptInput";
-import GenerateButton from "../_components/GenerateButton";
+import { Button } from "@/components/ui/button";
 import ResultDisplay from "@/app/ImageEditor/ResultDisplay";
 
 export default function ImageEditing() {
@@ -65,11 +65,12 @@ export default function ImageEditing() {
 
       <FileUpload preview={preview} setPreview={setPreview} loading={loading} />
       <PromptInput prompt={prompt} setPrompt={setPrompt} loading={loading} />
-      <GenerateButton
-        onClick={handleGenerate}
-        disabled={!preview || !prompt || loading}
-        loading={loading}
-      />
+       <Button
+            onClick={handleGenerate}
+            disabled={!prompt || loading || finished}
+          >
+            {loading ? "Generating..." : "Generate"}
+          </Button>
       <div className="flex justify-start w-145">
       <ResultDisplay result={result} loading={loading} />
       </div>
