@@ -37,7 +37,7 @@ export default function Chat() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:168/chat", {
+      const response = await axios.post("https://ai-image-back-5h6c.onrender.com/chat", {
         message: input,
       });
 
