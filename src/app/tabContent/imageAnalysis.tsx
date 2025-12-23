@@ -1,5 +1,5 @@
 
-import ImageUpload from "../_components/imageUpload";
+import ImageUpload from "../_features/imageUpload";
 export function ImageAnalysis() {
   return (
     <div className="flex flex-col items-center justify-start">

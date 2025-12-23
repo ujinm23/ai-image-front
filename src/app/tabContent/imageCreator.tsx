@@ -1,4 +1,4 @@
-import FoodImageCreator from "../_components/foodImageCreator";
+import FoodImageCreator from "../_features/foodImageCreator";
 
 export function ImageCreator() {
   return (

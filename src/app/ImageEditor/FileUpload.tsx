@@ -15,8 +15,8 @@ export default function FileUpload({ preview, setPreview, loading }: Props) {
   };
 
   return (
-    <div className="flex-col flex gap-2 items-end">
-      <label className="flex h-10 w-145 items-center px-3 py-2 border rounded-md border-[#E4E4E7] cursor-pointer">
+    <div className="flex-col flex gap-2">
+      <label className="flex h-10 w-145 items-center px-3 py-2 border rounded-md border-[#E4E4E7] font-medium text-[14px] cursor-pointer">
         <p className="px-2">Choose file</p>
         <p className="font-normal text-[#71717A]">JPG, PNG</p>
         <input
@@ -33,7 +33,7 @@ export default function FileUpload({ preview, setPreview, loading }: Props) {
           <img
             src={preview}
             alt="preview"
-            className="w-50 h-33.25 rounded-lg"
+            className="w-50 h-33.25 rounded-lg object-contain"
           />
           <DeleteButton onClick={() => setPreview(null)} />
         </div>

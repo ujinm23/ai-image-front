@@ -9,8 +9,8 @@ type Props = {
 
 export default function GenerateButton({ onClick, disabled, loading }: Props) {
   return (
-    <Button onClick={onClick} disabled={disabled}>
-      {loading ? "Editing..." : "Generate"}
+    <Button onClick={onClick} disabled={disabled} className="w-23.5 h-10">
+      {loading ? "  Generating..." : "Generate"}
     </Button>
   );
 }

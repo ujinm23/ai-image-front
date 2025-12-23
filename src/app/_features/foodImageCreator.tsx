@@ -28,7 +28,7 @@ export default function FoodImageCreator() {
     setResult("");
 
     try {
-      const response = await axios.post("http://localhost:168/image-create", {
+      const response = await axios.post("https://ai-image-back-5h6c.onrender.com/image-create", {
         input: textValue,
       });
       console.log("response", response.data);

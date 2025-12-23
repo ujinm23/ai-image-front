@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { DocumentIcon } from "../_icons/DocumentIcon";
-import DeleteButton from "./DeleteButton";
+import DeleteButton from "../_components/DeleteButton";
 import { ArticleGeneratorIcon } from "../_icons/ArticleGeneratorIcon";
 import ReloadButton from "../_components/reloadButton";
 
@@ -42,7 +42,7 @@ export default function ImageUpload() {
 
     try {
       const response = await axios.post(
-        "http://localhost:168/analyze-image",
+        "https://ai-image-back-5h6c.onrender.com/analyze-image",
         formData,
         {
           headers: {
@@ -101,7 +101,7 @@ export default function ImageUpload() {
                 <img
                   src={preview}
                   alt="preview"
-                  className="w-50 h-33.25 rounded-lg"
+                  className="w-50 h-33.25 rounded-lg object-contain"
                 />
                 <DeleteButton
                   onClick={() => {

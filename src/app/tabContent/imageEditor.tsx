@@ -1,4 +1,4 @@
-import ImageEditing from "../_components/imageEditing";
+import ImageEditing from "../_features/imageEditing";
 
 export function ImageEditor() {
   return (

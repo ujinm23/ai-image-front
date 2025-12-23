@@ -3,8 +3,8 @@ import { useState } from "react";
 import { ArticleGeneratorIcon } from "../_icons/ArticleGeneratorIcon";
 import ReloadButton from "../_components/reloadButton";
 import FileUpload from "@/app/ImageEditor/FileUpload";
-import PromptInput from "@/app/ImageEditor/promptInput";
-import GenerateButton from "./GenerateButton";
+import PromptInput from "../ImageEditor/PromptInput";
+import GenerateButton from "../_components/GenerateButton";
 import ResultDisplay from "@/app/ImageEditor/ResultDisplay";
 
 export default function ImageEditing() {
@@ -32,7 +32,7 @@ export default function ImageEditing() {
     formData.append("prompt", prompt);
 
     try {
-      const res = await fetch("http://localhost:168/image-editor", {
+      const res = await fetch("https://ai-image-back-5h6c.onrender.com/image-editor", {
         method: "POST",
         body: formData,
       });
@@ -48,7 +48,7 @@ export default function ImageEditing() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 items-end">
       <div className="flex justify-between w-145">
         <div className="flex items-center gap-2">
           <ArticleGeneratorIcon />
@@ -57,9 +57,11 @@ export default function ImageEditing() {
         <ReloadButton disabled={!finished} onClick={handleReload} />
       </div>
 
-      <p className="text-[#71717A] font-normal text-[14px]">
-        Upload a photo and provide a prompt, AI will edit your image.
-      </p>
+      <div className="flex justify-start w-145">
+        <p className="text-[#71717A] font-normal text-[14px]">
+          Upload a photo and provide a prompt, AI will edit your image.
+        </p>
+      </div>
 
       <FileUpload preview={preview} setPreview={setPreview} loading={loading} />
       <PromptInput prompt={prompt} setPrompt={setPrompt} loading={loading} />
@@ -68,7 +70,9 @@ export default function ImageEditing() {
         disabled={!preview || !prompt || loading}
         loading={loading}
       />
+      <div className="flex justify-start w-145">
       <ResultDisplay result={result} loading={loading} />
+      </div>
     </div>
   );
 }
