@@ -4,7 +4,6 @@ import { ImageAnalysis } from "./tabContent/imageAnalysis";
 import { ImageEditor } from "./tabContent/imageEditor";
 import { ImageCreator } from "./tabContent/imageCreator";
 import { useState } from "react";
-import Chat from "@/app/_components/Chat";
 
 type TabId = "tab1" | "tab2" | "tab3";
 
@@ -50,9 +49,6 @@ export default function Home() {
         </div>
 
         <div className=" w-full">{tabContent[activeTab]}</div>
-      </div>
-      <div className="justify-end flex w-screen">
-        <Chat />
       </div>
     </div>
   );

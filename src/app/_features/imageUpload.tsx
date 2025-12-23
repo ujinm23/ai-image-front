@@ -122,7 +122,7 @@ export default function ImageUpload() {
           </Button>
         </div>
 
-        <div className="h-41 flex flex-col gap-2 mt-4">
+        <div className="h-41 flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <DocumentIcon />
             <p>Here is the summary</p>
@@ -137,7 +137,9 @@ export default function ImageUpload() {
           )}
 
           {loading && (
-            <div className="animate-spin h-6 w-6 border border-[#E4E4E7] border-t-black rounded-full" />
+             <div className="flex justify-center items-center">
+              <div className="animate-spin h-6 w-6  border-2 border-gray-300 border-t-black rounded-full" />
+            </div>
           )}
           {result && (
             <p className="border border-[#E4E4E7] p-4 rounded-lg">{result}</p>

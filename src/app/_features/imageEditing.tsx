@@ -3,9 +3,10 @@ import { useState } from "react";
 import { ArticleGeneratorIcon } from "../_icons/ArticleGeneratorIcon";
 import ReloadButton from "../_components/reloadButton";
 import FileUpload from "@/app/ImageEditor/FileUpload";
-import PromptInput from "../ImageEditor/PromptInput";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import ResultDisplay from "@/app/ImageEditor/ResultDisplay";
+import Image from "next/image";
+import { ImageIcon } from "../_icons/ImageIcon";
 
 export default function ImageEditing() {
   const [preview, setPreview] = useState<string | null>(null);
@@ -32,10 +33,13 @@ export default function ImageEditing() {
     formData.append("prompt", prompt);
 
     try {
-      const res = await fetch("https://ai-image-back-5h6c.onrender.com/image-editor", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://ai-image-back-5h6c.onrender.com/image-editor",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const data = await res.json();
       setResult(data.result);
       setFinished(true);
@@ -64,15 +68,46 @@ export default function ImageEditing() {
       </div>
 
       <FileUpload preview={preview} setPreview={setPreview} loading={loading} />
-      <PromptInput prompt={prompt} setPrompt={setPrompt} loading={loading} />
-       <Button
-            onClick={handleGenerate}
-            disabled={!prompt || loading || finished}
-          >
-            {loading ? "Generating..." : "Generate"}
-          </Button>
-      <div className="flex justify-start w-145">
-      <ResultDisplay result={result} loading={loading} />
+      <Textarea
+        className="w-145 h-21 px-3 py-2 border rounded-md border-[#E4E4E7] text-[#71717A] font-normal text-[14px]"
+        placeholder="Your prompt here"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        disabled={loading}
+      />
+      <Button
+        onClick={handleGenerate}
+        disabled={!prompt || loading || finished}
+      >
+        {loading ? "Generating..." : "Generate"}
+      </Button>
+      <div className="h-41 w-145 flex flex-col gap-2 items-start">
+        <div className="flex items-center gap-2">
+          <ImageIcon/>
+          <p>Result</p>
+        </div>
+        {!result && (
+          <p className="text-[#71717A] font-normal text-[14px]">
+            Your image. Your text. Instant transformation.
+          </p>
+        )}
+        {loading && (
+          <div className="flex justify-center items-center">
+            <div className="animate-spin h-6 w-6  border-2 border-gray-300 border-t-black rounded-full" />
+          </div>
+        )}
+        {result && (
+          <div className="flex flex-col gap-1 border border-[#E4E4E7] p-4 rounded-lg">
+            <Image
+              src={result}
+              alt="Edited"
+              width={360}
+              height={360}
+              unoptimized
+              className="object-contain rounded-lg"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
