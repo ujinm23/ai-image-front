@@ -41,7 +41,7 @@ export default function ImageEditing() {
     formData.append("prompt", prompt);
 
    try {
-  const res = await fetch("http://localhost:168/image-editor", {
+  const res = await fetch("https://ai-image-back-5h6c.onrender.com/image-editor", {
     method: "POST",
     body: formData,
   });

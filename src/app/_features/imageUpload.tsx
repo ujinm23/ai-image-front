@@ -44,7 +44,7 @@ export default function ImageUpload() {
 
     try {
       const response = await axios.post(
-        "http://localhost:168/analyze-image",
+        "https://ai-image-back-5h6c.onrender.com/analyze-image",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

@@ -31,7 +31,7 @@ export default function FoodImageCreator() {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:168/image-create", {
+      const response = await axios.post("https://ai-image-back-5h6c.onrender.com/image-create", {
         input: textValue,
       });
 
