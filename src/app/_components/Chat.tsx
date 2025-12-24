@@ -20,7 +20,6 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
@@ -37,7 +36,7 @@ export default function Chat() {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://ai-image-back-5h6c.onrender.com/chat", {
+      const response = await axios.post("http://localhost:168/chat", {
         message: input,
       });
 

@@ -14,12 +14,14 @@ export default function ImageUpload() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [error, setError] = useState("");
 
   const handleReload = () => {
     setFile(null);
     setPreview(null);
     setResult("");
     setFinished(false);
+    setError("");
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,20 +44,30 @@ export default function ImageUpload() {
 
     try {
       const response = await axios.post(
-        "https://ai-image-back-5h6c.onrender.com/analyze-image",
+        "http://localhost:168/analyze-image",
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
+
+      if (response.status !== 200) {
+        setError(response.data.error || "Image analysis failed.");
+        setFinished(true);
+        return;
+      }
 
       setResult(response.data.description);
       setFinished(true);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
-      setResult("Failed to analyze image");
+
+      let message = "Image analysis failed. Please try again.";
+
+      if (axios.isAxiosError(err)) {
+        message = err.response?.data?.error ?? message;
+      }
+
+      setError(message);
+      setFinished(true);
     } finally {
       setLoading(false);
     }
@@ -78,7 +90,7 @@ export default function ImageUpload() {
           <ReloadButton disabled={!finished} onClick={handleReload} />
         </div>
         <p className="text-[#71717A] font-normal text-[14px]">
-          Upload a food photo, and AI will detect the ingredients.
+          Upload a photo.
         </p>
         <div className="flex-col flex gap-2 items-end">
           <div className="w-145 flex justify-start">
@@ -128,20 +140,25 @@ export default function ImageUpload() {
             <p>Here is the summary</p>
           </div>
 
-          {!result && (
-            <p className="text-[#71717A]  font-normal text-[14px]">
-              {loading
-                ? "Working ..."
-                : "First, enter your text to generate an image."}
+          {!result && !error && !loading && (
+            <p className="text-[#71717A] font-normal text-[14px]">
+              Upload an image to get a summary.
             </p>
           )}
 
           {loading && (
-             <div className="flex justify-center items-center">
-              <div className="animate-spin h-6 w-6  border-2 border-gray-300 border-t-black rounded-full" />
+            <div className="flex justify-center items-center">
+              <div className="animate-spin h-6 w-6 border-2 border-gray-300 border-t-black rounded-full" />
             </div>
           )}
-          {result && (
+
+          {error && (
+            <div className="border border-red-300 bg-red-50 text-red-700 p-4 rounded-lg text-sm">
+               {error}
+            </div>
+          )}
+
+          {result && !error && (
             <p className="border border-[#E4E4E7] p-4 rounded-lg">{result}</p>
           )}
         </div>

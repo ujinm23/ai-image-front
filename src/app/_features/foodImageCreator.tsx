@@ -13,6 +13,7 @@ export default function FoodImageCreator() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [finished, setFinished] = useState(false);
+  const [error, setError] = useState("");
 
   const handleReload = () => {
     setTextValue("");
@@ -24,23 +25,34 @@ export default function FoodImageCreator() {
 
   const handleGenerate = async () => {
     if (!textValue) return;
+
     setLoading(true);
     setResult("");
+    setError("");
 
     try {
-      const response = await axios.post("https://ai-image-back-5h6c.onrender.com/image-create", {
+      const response = await axios.post("http://localhost:168/image-create", {
         input: textValue,
       });
-      console.log("response", response.data);
+
       setResult(response.data.result);
       setFinished(true);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
-      setResult("Failed to create image");
+
+      let message = "Something went wrong. Please try again.";
+
+      if (axios.isAxiosError(err)) {
+        message = err.response?.data?.error ?? message;
+      }
+
+      setError(message);
+      setFinished(true);
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="h-41 flex flex-col gap-2">
       <div className="flex justify-between w-145">
@@ -83,9 +95,14 @@ export default function FoodImageCreator() {
               <div className="animate-spin h-6 w-6  border-2 border-gray-300 border-t-black rounded-full" />
             </div>
           )}
-          {result && (
+          {error && (
+            <div className="border border-red-300 bg-red-50 text-red-700 p-4 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          {result && !error && (
             <div className="flex flex-col gap-1 border border-[#E4E4E7] p-4 rounded-lg">
-              <p className="text-sm font-medium text-[#09090B]">{textValue}</p>
               <Image
                 src={result}
                 alt="Generated"
